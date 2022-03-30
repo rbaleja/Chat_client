@@ -20,17 +20,18 @@ public:
 private slots:
     void on_pushButton_Connect_clicked();
     void on_pushButton_Send_clicked();
+    void on_lineEdit_messegeInput_returnPressed();
 
     void socketConnected();
     void socketDisconnected();
     void socketReadyRead();
 
-    void on_lineEdit_messegeInput_returnPressed();
 
 private:
     Ui::MainWindow *ui;
     bool connectedToHost;
     QTcpSocket* socket;
+    QString serverIPadress = "127.0.0.1";
 
     void printMessage(QString);
 };

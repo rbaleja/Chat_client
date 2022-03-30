@@ -26,7 +26,7 @@ void MainWindow::on_pushButton_Connect_clicked()
         connect(socket, &QTcpSocket::readyRead, this, &MainWindow::socketReadyRead);
 
 
-        socket->connectToHost("127.0.0.1", 8001);
+        socket->connectToHost(serverIPadress, 8001);
     }
     else
     {
