@@ -45,7 +45,11 @@
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_2">
       <item>
-       <widget class="QLineEdit" name="lineEdit_messegeInput"/>
+       <widget class="QLineEdit" name="lineEdit_messegeInput">
+        <property name="inputMethodHints">
+         <set>Qt::ImhNone</set>
+        </property>
+       </widget>
       </item>
       <item>
        <widget class="QPushButton" name="pushButton_Send">

@@ -85,3 +85,9 @@ void MainWindow::on_pushButton_Send_clicked()
     ui->lineEdit_messegeInput->clear();
 }
 
+
+void MainWindow::on_lineEdit_messegeInput_returnPressed()
+{
+    ui->pushButton_Send->click();
+}
+

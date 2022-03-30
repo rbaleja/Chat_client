@@ -25,6 +25,8 @@ private slots:
     void socketDisconnected();
     void socketReadyRead();
 
+    void on_lineEdit_messegeInput_returnPressed();
+
 private:
     Ui::MainWindow *ui;
     bool connectedToHost;
