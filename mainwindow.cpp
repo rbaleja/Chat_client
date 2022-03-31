@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "simplecrypt.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -31,8 +32,8 @@ void MainWindow::on_pushButton_Connect_clicked()
     else
     {
         QString name = ui->lineEdit_nameInput->text();
-        socket->write("<font color=\"Orange\">" + name.toUtf8() + " has left the chat room.</font>");
-
+        //socket->write("<font color=\"Orange\">" + name.toUtf8() + " has left the chat room.</font>");
+        ui->textBrowser_ChatDisplay->append("<font color=\"Orange\">" + name.toUtf8() + " has left the chat room.</font>: ");
         socket->disconnectFromHost();
     }
 }
@@ -45,7 +46,7 @@ void MainWindow::socketConnected()
     printMessage("<font color=Green>Connected to server.</font>");
 
     QString name = ui->lineEdit_nameInput->text();
-    socket->write("<font color=\"Purple\">" + name.toUtf8() + " has joined the chat room.</font>");
+    //socket->write("<font color=\"Purple\">" + name.toUtf8() + " has joined the chat room.</font>");
 
     ui->pushButton_Connect->setText("Disconnect");
 
@@ -66,7 +67,30 @@ void MainWindow::socketDisconnected()
 
 void MainWindow::socketReadyRead()
 {
-    ui->textBrowser_ChatDisplay->append(socket->readAll());
+    QString cryptMessage(socket->readAll());
+    QString decryptMessage = decryptText(cryptMessage);
+    ui->textBrowser_ChatDisplay->append(decryptMessage);
+
+}
+
+
+QString MainWindow::cryptText(QString message)
+{
+    SimpleCrypt crypto;
+    crypto.setKey(key);
+    QString cryptMessage = crypto.encryptToString(message);
+    qDebug() << cryptMessage;
+    return cryptMessage;
+}
+
+
+QString MainWindow::decryptText(QString message)
+{
+    SimpleCrypt crypto;
+    crypto.setKey(key);
+    QString decryptMessage = crypto.decryptToString(message);
+
+    return decryptMessage;
 }
 
 
@@ -80,8 +104,15 @@ void MainWindow::on_pushButton_Send_clicked()
 {
     QString name = ui->lineEdit_nameInput->text();
     QString message = ui->lineEdit_messegeInput->text();
-    socket->write("<font color=\"Blue\">" + name.toUtf8() + "</font>: " + message.toUtf8());
+    //QString cryptName = cryptText(name + ":");
+    QString cryptMessage = cryptText(message);
+    //ui->textBrowser_ChatDisplay->append("<font color=\"Blue\">" + name.toUtf8() + "</font>: " + cryptMessage.toUtf8());
+    //socket->write("<font color=\"Blue\">" + cryptName.toUtf8() + "</font>: " + cryptMessage.toUtf8());
+    socket->write(cryptMessage.toUtf8());
+    ui->textBrowser_ChatDisplay->append(name.toUtf8() + " - encrypted message sent:" + cryptMessage);
 
+    //QString decryptMeassage = decryptText(cryptMessage);
+    //socket->write("<font color=\"Blue\">" + name.toUtf8() + "</font>: " + decryptMeassage.toUtf8());
     ui->lineEdit_messegeInput->clear();
 }
 
@@ -89,5 +120,11 @@ void MainWindow::on_pushButton_Send_clicked()
 void MainWindow::on_lineEdit_messegeInput_returnPressed()
 {
     ui->pushButton_Send->click();
+}
+
+
+void MainWindow::on_lineEdit_nameInput_returnPressed()
+{
+    ui->pushButton_Connect->click();
 }
 
