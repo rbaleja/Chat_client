@@ -22,9 +22,8 @@ void MainWindow::on_pushButton_Connect_clicked()
     {
 
         QMessageBox messagebox;
-        messagebox.setText("Wpisz imie lub psełdonim!");
+        messagebox.setText("<font color=Red>Enter your name.</font>");
         messagebox.exec();
-
 
     }
     else
@@ -37,7 +36,7 @@ void MainWindow::on_pushButton_Connect_clicked()
             connect(socket, &QTcpSocket::disconnected, this, &MainWindow::socketDisconnected);
             connect(socket, &QTcpSocket::readyRead, this, &MainWindow::socketReadyRead);
 
-            socket->connectToHost(serverIPadress, 8001);
+            socket->connectToHost(serverIPAdress, 8001);
         }
         else
         {
@@ -118,7 +117,7 @@ void MainWindow::on_pushButton_Send_clicked()
     if (ui->lineEdit_messegeInput->text().isEmpty())
     {
         QMessageBox messagebox;
-        messagebox.setText("Wpisz wiadomość!");
+        messagebox.setText("<font color=\"Red\">Enter your message.</font>");
         messagebox.exec();
     }
     else

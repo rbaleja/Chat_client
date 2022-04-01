@@ -37,7 +37,7 @@ private:
     bool connectedToHost;
     QTcpSocket* socket;
     void printMessage(QString);
-    QString serverIPadress = "127.0.0.1";
+    QString serverIPAdress = "127.0.0.1";
 
     quint64 key = 0x0c2ad4a4acb9f023;
     QString cryptText(QString);

@@ -71,8 +71,26 @@
      <height>25</height>
     </rect>
    </property>
+   <widget class="QMenu" name="menuSetings">
+    <property name="title">
+     <string>Setings</string>
+    </property>
+    <addaction name="actionServer"/>
+    <addaction name="actionpasword_to_cryp_message"/>
+   </widget>
+   <addaction name="menuSetings"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="actionServer">
+   <property name="text">
+    <string>Server</string>
+   </property>
+  </action>
+  <action name="actionpasword_to_cryp_message">
+   <property name="text">
+    <string>Pasword to cryp message</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>
