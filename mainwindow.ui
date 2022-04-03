@@ -88,7 +88,7 @@
   </action>
   <action name="actionpasword_to_cryp_message">
    <property name="text">
-    <string>Pasword to cryp message</string>
+    <string>Pasword for encrypt message</string>
    </property>
   </action>
  </widget>

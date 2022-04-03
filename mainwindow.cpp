@@ -8,6 +8,22 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     connectedToHost = false;
+    QFile file("config.cfg");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug() << "Error";
+        return;
+    }
+    else
+    {
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream in(&file);
+           while (!in.atEnd())
+           {
+                  serverIPAdress = in.readLine();
+                  qDebug() << "Read cfg file" << serverIPAdress;
+           }
+    }
 }
 
 MainWindow::~MainWindow()
@@ -54,7 +70,7 @@ void MainWindow::socketConnected()
 {
     qDebug() << "Connect to server.";
 
-    printMessage("<font color=Green>Connected to server.</font>");
+    printMessage("<font color=Green>Connected to server: </font>" + serverIPAdress);
 
     QString name = ui->lineEdit_nameInput->text();
     ui->textBrowser_ChatDisplay->append("<font color=\"Purple\">" + name.toUtf8() + " has joined the chat room.</font>");;
@@ -90,6 +106,7 @@ QString MainWindow::cryptText(QString message)
     crypto.setKey(key);
     QString cryptMessage = crypto.encryptToString(message);
     qDebug() << cryptMessage;
+    qDebug() << key << "key";
     return cryptMessage;
 }
 
@@ -99,8 +116,10 @@ QString MainWindow::decryptText(QString message)
     SimpleCrypt crypto;
     crypto.setKey(key);
     QString decryptMessage = crypto.decryptToString(message);
-
+    qDebug() << key << "key";
+    qDebug() << decryptMessage;
     return decryptMessage;
+
 }
 
 
@@ -142,5 +161,68 @@ void MainWindow::on_lineEdit_messegeInput_returnPressed()
 void MainWindow::on_lineEdit_nameInput_returnPressed()
 {
     ui->pushButton_Connect->click();
+}
+
+
+void MainWindow::on_actionServer_triggered()
+{
+    bool ok;
+    QString IPAdress;
+    IPAdress = QInputDialog::getText(this, "Server IP Adress", "IP or hostname", QLineEdit::Normal, "127.0.0.1", &ok);
+    if (ok == true)
+    {
+        serverIPAdress = IPAdress;
+        QFile file("config.cfg");
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+        {
+            qDebug() << "Error";
+            return;
+        }
+        else
+        {
+            file.open(QIODevice::WriteOnly | QIODevice::Text);
+            QTextStream out(&file); out << serverIPAdress;
+            file.close();
+        }
+    }
+    else
+    {
+        serverIPAdress = "";
+
+        QMessageBox messagebox;
+        messagebox.setText("<font color=\"Red\">Enter IP adress!</font>");
+        messagebox.exec();
+    }
+
+    qDebug() << serverIPAdress;
+    qDebug() << IPAdress;
+
+}
+
+
+void MainWindow::on_actionpasword_to_cryp_message_triggered()
+{
+    /*bool ok;
+    QString password = QInputDialog::getText(this, "Password", "Only numbers", QLineEdit::Normal, "", &ok);
+    if (ok == true)
+    {
+
+        key = password.toULongLong(&ok, 16);
+        qDebug() << key << password;
+        if (!ok)
+        {
+            qDebug() << "conversion failed!";
+        }
+
+    }
+    else
+    {
+        key = 0;
+        qDebug() << "key" << key;
+    }
+
+
+    */
+
 }
 
