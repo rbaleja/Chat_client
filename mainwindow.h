@@ -46,6 +46,8 @@ private:
 
     QString cryptText(QString);
     QString decryptText(QString);
+    ;
+    void readCfgFile();
 
 };
 #endif // MAINWINDOW_H

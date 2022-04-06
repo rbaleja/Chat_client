@@ -8,22 +8,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     connectedToHost = false;
-    QFile file("config.cfg");
-    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-        qDebug() << "Error";
-        return;
-    }
-    else
-    {
-        file.open(QIODevice::ReadOnly | QIODevice::Text);
-        QTextStream in(&file);
-           while (!in.atEnd())
-           {
-                  serverIPAdress = in.readLine();
-                  qDebug() << "Read cfg file" << serverIPAdress;
-           }
-    }
+    readCfgFile();
 }
 
 MainWindow::~MainWindow()
@@ -120,6 +105,27 @@ QString MainWindow::decryptText(QString message)
     qDebug() << decryptMessage;
     return decryptMessage;
 
+}
+
+
+void MainWindow::readCfgFile()
+{
+    QFile file("config.cfg");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+        qDebug() << "Error";
+        return;
+    }
+    else
+    {
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream in(&file);
+           while (!in.atEnd())
+           {
+                  serverIPAdress = in.readLine();
+                  qDebug() << "Read cfg file" << serverIPAdress;
+           }
+    }
 }
 
 
