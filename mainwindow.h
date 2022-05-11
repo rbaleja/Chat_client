@@ -42,12 +42,19 @@ private:
 
     QString serverIPAdress;// = "127.0.0.1";
 
-    quint64 key = 0x0c2ad4a4acb9f023;
+    quint64 key;//= 0x0c2ad4a4acb9f023;
 
     QString cryptText(QString);
     QString decryptText(QString);
-    ;
+
     void readCfgFile();
+    void readKeyFile();
+
+    quint64 stringToHex(QString);
+    QString hexToString(quint64);
+
+
+    QString stringKey;
 
 };
 #endif // MAINWINDOW_H

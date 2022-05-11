@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->setupUi(this);
     connectedToHost = false;
     readCfgFile();
+    readKeyFile();
+
 }
 
 MainWindow::~MainWindow()
@@ -55,13 +57,16 @@ void MainWindow::socketConnected()
 {
     qDebug() << "Connect to server.";
 
+    readKeyFile();
+    stringKey = hexToString(key);
     printMessage("<font color=Green>Connected to server: </font>" + serverIPAdress);
-
+    printMessage("<font color=Yellow>Actual key: </font>" + stringKey);
     QString name = ui->lineEdit_nameInput->text();
     ui->textBrowser_ChatDisplay->append("<font color=\"Purple\">" + name.toUtf8() + " has joined the chat room.</font>");;
     ui->pushButton_Connect->setText("Disconnect");
 
     connectedToHost = true;
+
 }
 
 
@@ -113,6 +118,7 @@ void MainWindow::readCfgFile()
     QFile file("config.cfg");
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
     {
+        printMessage("<font color=\"Red\">No cfg file in program dicertory!</font>");
         qDebug() << "Error";
         return;
     }
@@ -127,6 +133,51 @@ void MainWindow::readCfgFile()
            }
     }
 }
+
+void MainWindow::readKeyFile()
+{
+    QFile file("key.cfg");
+    if (!file.open(QIODevice::ReadOnly | QIODevice::ReadOnly))
+    {
+        printMessage("<font color=\"Red\">No key file in program dicertory!</font>");
+        qDebug() << "Error";
+        return;
+    }
+    else
+    {
+        file.open(QIODevice::ReadOnly | QIODevice::Text);
+        QTextStream in(&file);
+           while (!in.atEnd())
+           {
+                  QString string_key = in.readLine();
+                  key = stringToHex(string_key);
+                  qDebug() << "Read key file" << string_key;
+                  qDebug() << key;
+           }
+    }
+}
+
+quint64 MainWindow::stringToHex(QString password)
+{
+    quint64 key = 0;
+    bool ok;
+    key = password.toULongLong(&ok, 10);
+    if(!ok)
+    {
+        qDebug() << "conversion falied!";
+    }
+
+
+    return key;
+}
+
+QString MainWindow::hexToString(quint64 key)
+{
+    QString string_key = QString::number(key);
+
+    return string_key;
+}
+
 
 
 void MainWindow::printMessage(QString message)
@@ -208,27 +259,37 @@ void MainWindow::on_actionServer_triggered()
 
 void MainWindow::on_actionpasword_to_cryp_message_triggered()
 {
-    /*bool ok;
-    QString password = QInputDialog::getText(this, "Password", "Only numbers", QLineEdit::Normal, "", &ok);
+    readKeyFile();
+    stringKey = hexToString(key);
+    bool ok;
+    QString password = QInputDialog::getText(this, "Password", "Write onw password", QLineEdit::Normal, stringKey, &ok);
     if (ok == true)
     {
-
-        key = password.toULongLong(&ok, 16);
-        qDebug() << key << password;
-        if (!ok)
+        QFile file("key.cfg");
+        if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
         {
-            qDebug() << "conversion failed!";
+            qDebug() << "Error";
+            return;
+        }
+        else
+        {
+            file.open(QIODevice::WriteOnly | QIODevice::Text);
+
+
+            QTextStream out(&file); out << password;
+            file.close();
+            readKeyFile();
+            stringKey = hexToString(key);
+            printMessage("<font color=Yellow>Actual key: </font>" + stringKey);
         }
 
     }
     else
     {
-        key = 0;
-        qDebug() << "key" << key;
+        QMessageBox messagebox;
+        messagebox.setText("<font color=\"Red\">Enter password!</font>");
+        messagebox.exec();
     }
-
-
-    */
 
 }
 
